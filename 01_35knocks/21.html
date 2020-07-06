@@ -8,12 +8,18 @@
   <div>21.配列[1, 2, 3]について、これが小さい順に並んでいればOK、そうでなければNGと表示するプログラムを作成せよ、また任意で配列の中身を変え、きちんと動作するか確認せよ</div>
 
   <script>
-  // let numbers = [1, 2, 3];
-  let numbers = [5, 3, 1, 2, 4];
+  let correct = [1, 2, 3];
+  let toCheck = [3, 1, 2];
+  let result = "";
 
-  let sorted = numbers.sort();
-  console.log("numbersは" + numbers);
-  console.log("sortedは" + sorted);
+  for(let i = 0; i <= correct.length; i++){
+    if(correct[i] !== toCheck[i]){
+      result = "NG";
+      break;
+    }
+    result = "OK";
+  }
+  console.log(result);
 
   </script>
 </body>
