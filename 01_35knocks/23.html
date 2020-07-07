@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>35knocks - 23 -</title>
+</head>
+<body>
+  <div>23.問22の配列について、これを小さい順に並べかえるプログラムをfor文とif文のみを使用して作成せよ</div>
+
+  <script>
+  let numbers = [7, 2, 6];
+
+  for(let i = 0; i < numbers.length; i++){
+    for(let j = numbers.length; j > i; j--){
+      let tmp = numbers[j];
+      numbers[j] = numbers[j-1];
+      numbers[j-1] = tmp;
+    };
+  };
+  console.log(numbers);
+  </script>
+</body>
+</html>
