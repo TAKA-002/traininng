@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>問題３３</title>
+
+  <script>
+    let distance = 7000; //移動距離（メートル）
+
+    function boarding_fee(distance) {
+      const firstTimeFee = 610; //初乗り1700メートルまで
+      const every300mFee = 80; //300メートルごと
+
+      if (distance >= 1700) {
+        let amountFee = 0;
+        let remainingDistance = distance - 1700;
+        let remainingFee = (Math.floor(remainingDistance / 300)) * every300mFee;
+        amountFee = firstTimeFee + remainingFee;
+        return amountFee;
+      } else {
+        return firstTimeFee;
+      };
+    };
+
+    let payment = boarding_fee(distance);
+    console.log("このかたは、" + distance + "mタクシーを利用したので、" + payment + "円の料金となります。");
+
+  </script>
+
+</head>
+
+<body>
+  <h1>33.初乗り料金が1700mまで610円、それ以降は300mごとに80円のタクシーがある。このタクシーに乗った距離をm単位で引数とし、料金を計算する関数を作成せよ</h1>
+</body>
+
+</html>

@@ -1,26 +1,25 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>35knocks - 21 -</title>
+    <meta charset="UTF-8">
+    <title>問題２１</title>
+
+    <script>
+        let correct = [1, 2, 3];
+        let confirmed = [3, 1, 2];
+        if (correct.toString() == confirmed.toString()) {
+            console.log("OK");
+        } else {
+            console.log("NG");
+        };
+
+    </script>
+
 </head>
+
 <body>
-  <div>21.配列[1, 2, 3]について、これが小さい順に並んでいればOK、そうでなければNGと表示するプログラムを作成せよ、また任意で配列の中身を変え、きちんと動作するか確認せよ</div>
-
-  <script>
-  let correct = [1, 2, 3];
-  let toCheck = [3, 1, 2];
-  let result = "";
-
-  for(let i = 0; i <= correct.length; i++){
-    if(correct[i] !== toCheck[i]){
-      result = "NG";
-      break;
-    }
-    result = "OK";
-  }
-  console.log(result);
-
-  </script>
+    <h1>21.配列[1, 2, 3]について、これが小さい順に並んでいればOK、そうでなければNGと表示するプログラムを作成せよ、また任意で配列の中身を変え、きちんと動作するか確認せよ</h1>
 </body>
+
 </html>

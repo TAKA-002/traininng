@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>問題３２</title>
+
+  <script>
+    let yen = 10000; //換算したい円
+    let dollerRate = 120; //1ドル120円
+
+    function getDoller(yen, dollerRate) {
+      return Math.floor(yen / dollerRate);
+    };
+
+    function getCent(yen, dollerRate) {
+      let doller = yen / dollerRate;
+      let array = String(doller).split('.');
+      if (array[1]) {
+        let centValue = Number('0.' + array[1]);
+        return Math.floor(centValue * 100);
+      } else {
+        return 0;
+      };
+    };
+
+    let doller = getDoller(yen, dollerRate);
+    let cent = getCent(yen, dollerRate);
+    console.log('換金したい金額が' + yen + '円で、1ドル' + dollerRate + '円のレートの場合、ドル換算で' + doller + 'ドル' + cent + 'セントとなる。');
+
+  </script>
+
+</head>
+
+<body>
+  <h1>32.換算したい金額（円）と1ドル何円かの2つの整数を引数とし、換算したい金額が何ドル何セントか計算して表示する関数を作成せよ。1セントは1/100ドルである（1セント未満の端数切り捨て）</h1>
+</body>
+
+</html>

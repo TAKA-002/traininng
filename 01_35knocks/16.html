@@ -1,27 +1,30 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>35knocks - 16 -</title>
+    <meta charset="UTF-8">
+    <title>問題１６</title>
+
+    <script>
+        let num1 = 10;
+        let num2 = 3;
+        let sum = num1 + num2;
+
+        let asterisk = "";
+        for (let i = 0; i < sum; i++) {
+            if (i % 5 === 0) {
+                asterisk += " ";
+            }
+            asterisk += "*";
+        };
+        console.log(asterisk);
+
+    </script>
+
 </head>
+
 <body>
-  <div>16.問2で求めた「和」の数だけ*を出力するプログラムをfor文を用いて作成せよ。ただし、出力は１行で行うものとし、５個おきにスペース（全角半角は問わない）を入れるものとする</div>
-
-  <script>
-  var number1 = 10;
-  var number2 = 3;
-
-  var sum = number1 + number2;
-  var strings = "";
-
-  for(let i = 1; i <= sum; i++){
-    if(i % 5 === 0){
-      strings += " ";
-    }else{
-      strings += "*";
-    };
-  };
-  console.log(strings);
-  </script>
+    <h1>16.問2で求めた「和」の数だけ*を出力するプログラムをfor文を用いて作成せよ。ただし、出力は１行で行うものとし、５個おきにスペース（全角半角は問わない）を入れるものとする</h1>
 </body>
+
 </html>

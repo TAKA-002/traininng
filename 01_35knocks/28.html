@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>28</title>
+</head>
+
+<body>
+    <h1>28.問15について、任意の数字を引数とし、その数字分*を出力する関数を作成せよ。ただし、出力は1行で行うものとする</h1>
+    <script>
+        let number1 = 10;
+        let number2 = 3;
+        let symbol = "";
+
+        function makeSymbol(num1, num2) {
+            let multiplication = num1 * num2;
+            for (let i = 1; i <= multiplication.length; i++) {
+                symbol += "*";
+            }
+            console.log(symbol);
+        };
+
+        makeSymbol(number1, number2);
+
+    </script>
+</body>
+
+</html>

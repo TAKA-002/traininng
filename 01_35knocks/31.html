@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>問題３１</title>
+
+	<script>
+		let symbol = "";
+		for (let i = 0; i < 5; i++) {
+			for (let j = 0; j < i + 1; j++) {
+				symbol += "*";
+			}
+			console.log(symbol);
+			symbol = "";
+		}
+		for (let i = 4; i > 0; i--) {
+			for (let j = 0; j < i; j++) {
+				symbol += "*";
+			}
+			console.log(symbol);
+			symbol = "";
+		}
+
+	</script>
+
+</head>
+
+<body>
+	<h1>31.for文とif文を用いて下図の図形を出力せよ、ただし、console.log('*\n**\n***...')のようにべた書きで出力してはならない</h1>
+</body>
+
+</html>

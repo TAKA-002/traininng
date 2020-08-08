@@ -1,23 +1,28 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>35knocks - 23 -</title>
+    <meta charset="UTF-8">
+    <title>問題２３</title>
+
+    <script>
+        let numbers = [7,2,6];
+        for(let i = 0; i < numbers.length; i++){//以下のfor分の繰り返しが1度終わったら、配列の値の数だけ繰り返す
+            for(let j = numbers.length; j > i; j--){//以下のif文を配列の値の数だけ繰り返し、１回確認したら最後尾から一つずつ手前の値で実施する
+                if(numbers[j] < numbers[j-1]){//配列最後尾の値が最後尾の一つ前の値より小さかった場合
+                    let esc = numbers[j];//まず他の変数に、配列最後尾の値を保管
+                    numbers[j] = numbers[j-1];//配列最後尾に最後尾から一つ前の値を上書き
+                    numbers[j-1] = esc;//保管していた元々の配列最後尾の値を最後から一つ前に格納
+                };
+            };
+        };
+        console.log(numbers);
+    </script>
+
 </head>
+
 <body>
-  <div>23.問22の配列について、これを小さい順に並べかえるプログラムをfor文とif文のみを使用して作成せよ</div>
-
-  <script>
-  let numbers = [7, 2, 6];
-
-  for(let i = 0; i < numbers.length; i++){
-    for(let j = numbers.length; j > i; j--){
-      let tmp = numbers[j];
-      numbers[j] = numbers[j-1];
-      numbers[j-1] = tmp;
-    };
-  };
-  console.log(numbers);
-  </script>
+    <h1>23.問22の配列について、これを小さい順に並べかえるプログラムをfor文とif文のみを使用して作成せよ</h1>
 </body>
+
 </html>

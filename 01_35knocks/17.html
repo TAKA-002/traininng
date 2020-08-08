@@ -1,27 +1,31 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>35knocks - 17 -</title>
+    <meta charset="UTF-8">
+    <title>問題１７</title>
+
+    <script>
+        let num1 = 10;
+        let num2 = 3;
+        let sum = num1 + num2;
+
+        let asterisk = "";
+        for (let i = 1; i <= sum; i++) {
+            if (i % 5 === 0) {
+                asterisk += "bar";
+            } else {
+                asterisk += "*";
+            };
+        };
+        console.log(asterisk);
+
+    </script>
+
 </head>
+
 <body>
-  <div>17.問2で求めた「和」の数だけ*を出力するプログラムをfor文を用いて作成せよ。ただし、出力は１行で行うものとし、５の倍数の時に*の代わりにbarと表示せよ</div>
-
-  <script>
-  var number1 = 10;
-  var number2 = 3;
-
-  var sum = number1 + number2;
-  var strings = "";
-
-  for(let i = 1; i <= sum; i++){
-    if(i % 5 === 0){
-      strings += "bar";
-    }else{
-      strings += "*";
-    };
-  };
-  console.log(strings);
-  </script>
+    <h1>17.問2で求めた「和」の数だけ*を出力するプログラムをfor文を用いて作成せよ。ただし、出力は１行で行うものとし、５の倍数の時に*の代わりにbarと表示せよ</h1>
 </body>
+
 </html>

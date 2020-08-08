@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>問題２９</title>
+
+    <script>
+        let num1 = 10;
+        let num2 = 3;
+        let sum = num1 + num2;
+
+        function star(unique_num) {
+            let asterisk = "";
+            for (let i = 1; i <= unique_num; i++) {
+                if (i % 5 === 0) {
+                    asterisk += "bar";
+                } else {
+                    asterisk += "*";
+                };
+            };
+            return asterisk;
+        };
+        let result = star(sum);
+        console.log(result);
+
+    </script>
+
+</head>
+
+<body>
+    <h1>29.問17について、任意の数字を引数とし、その数だけ*を出力する関数を作成せよ。ただし、出力は1行で行うものとし、5の倍数の時に*の代わりにbarと表示せよ</h1>
+</body>
+
+</html>

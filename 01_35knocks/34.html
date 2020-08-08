@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>問題３４</title>
+
+  <script>
+    let visitors = 20;
+
+    function amountFees() {
+      let admissionFees = 0;
+      let amountFees = 0;
+      if (visitors >= 5 && visitors <= 19) {
+        admissionFees = 550;
+      } else if (visitors >= 20) {
+        admissionFees = 500;
+      } else {
+        admissionFees = 600;
+      }
+      return amountFees = visitors * admissionFees;
+    }
+    let fee = amountFees(visitors);
+    console.log("美術館の入場料は" + visitors + "人できた場合、合計" + fee + "円である");
+
+  </script>
+
+</head>
+
+<body>
+  <h1>34.ある美術館の入場料金は、1人600円であるが、5人以上のグループなら1人550円、20人以上の団体なら1人500円である。人数を引数とし、入場料の合計を計算する関数を作成せよ</h1>
+</body>
+
+</html>

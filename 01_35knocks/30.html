@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>問題３０</title>
+
+    <script>
+        for (let i = 1; i <= 30; i++) {
+            if (i % 5 === 0 && i % 3 === 0) {
+                console.log("foobar");
+            } else if (i % 5 === 0) {
+                console.log("bar");
+            } else if (i % 3 === 0) {
+                console.log("foo");
+            } else {
+                console.log(i);
+            };
+        };
+
+    </script>
+
+</head>
+
+<body>
+    <h1>30.1から100までの値を繰り返しで表示するが、3の倍数の時はfoo、5の倍数の時はbarと数字の代わりに表示するプログラムを作成せよ（関数でなくて良い）。なお、3と5の両方の倍数の時はfoobarと表示されるものとする</h1>
+</body>
+
+</html>
