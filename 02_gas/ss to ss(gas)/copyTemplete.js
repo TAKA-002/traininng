@@ -1,4 +1,4 @@
-//仮想シフト表から「月を取得」
+//仮想シフト表から「月を取得」してmm形式でリターン
 function getMakingMonth() {
   //仮想シフト表のIDを取得する
   const ss = SpreadsheetApp.openById('1YWp9IUB1LGed4LZGYd2DNKvQx4RqSTozmWYs-hSiAWI');
@@ -17,7 +17,7 @@ function getMakingMonth() {
   return month;
 }
 
-//仮想シフト表から「年」を取得
+//仮想シフト表から「年」を取得を取得してyyyy形式でリターン
 function getMakingYear() {
   const ss = SpreadsheetApp.openById('1YWp9IUB1LGed4LZGYd2DNKvQx4RqSTozmWYs-hSiAWI');
   const sheet = ss.getSheetByName('シート1');
@@ -32,7 +32,6 @@ function copyTemplete(){
   //作成する年と月を取得
   var makingMonth = getMakingMonth();
   var makingYear = getMakingYear();
-  console.log(makingMonth);
   
   //テンプレートとなる業務管理シートを取得
   var templeteFile = DriveApp.getFileById('1lsxixwYUSTfWOStrcM2mmocPjgyFvNyTbj2B395T6WU');
@@ -42,7 +41,7 @@ function copyTemplete(){
   
   //出力する時のファイル名を指示する
   //  var OutputFileName = templeteFile.getName().replace('仮想業務管理シート', '')+Utilities.formatDate(new Date(), 'JST', 'yyyyMM');
-  var OutputFileName = templeteFile.getName().replace('仮想業務管理シート', makingYear + makingMonth);
+  var OutputFileName = templeteFile.getName().replace('仮想業務管理シート', '業務管理シート_' + makingYear + makingMonth);
   
   //実行
   templeteFile.makeCopy(OutputFileName, OutputFolder);
