@@ -1,6 +1,7 @@
 function myFunction() {
   //業務管理シートテンプレートファイルをコピー（copyTemplete.gs）
     copyTemplete();
+    getDuplicatedFile();
   
   //複製した業務管理シートの中のテンプレートシートを複製（土日祝日と平日でことなるテンプレート（createSheet.gs）
   
