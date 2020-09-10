@@ -6,7 +6,7 @@ function getMakingMonth() {
   const ss = SpreadsheetApp.openById('1DNxOMCa8u3qcZLVws9kvxh2TdLMr7rLdu4ffc7aLy0M');//★★★①シフト表のIDを入力★★★
   
   //取得したスプレッドシートのシフト表のシートを取得する
-  const sheet = ss.getSheetByName('シート1');//★★★②シフト表のシート名を入力★★★
+  const sheet = ss.getSheetByName('9月シフト');//★★★②シフト表のシート名を入力★★★
   
   //シフト表のシートの作成月の記載されているセルを取得する
   const range = sheet.getRange('B2').getValue();//★★★③シフト表の年月日を入力しているセルを入力★★★
@@ -23,7 +23,7 @@ function getMakingMonth() {
 //仮想シフト表から「年」を取得を取得してyyyy形式でリターン
 function getMakingYear() {
   const ss = SpreadsheetApp.openById('1DNxOMCa8u3qcZLVws9kvxh2TdLMr7rLdu4ffc7aLy0M');//★★★④シフト表のIDを入力★★★
-  const sheet = ss.getSheetByName('シート1');//★★★⑤シフト表のシート名を入力★★★
+  const sheet = ss.getSheetByName('9月シフト');//★★★⑤シフト表のシート名を入力★★★
   const range = sheet.getRange('B2').getValue();//★★★⑥シフト表の年月日を入力しているセルを入力★★★
   var shiftDate = new Date(range);
   var year = shiftDate.getFullYear();
