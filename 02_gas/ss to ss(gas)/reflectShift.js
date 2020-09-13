@@ -12,9 +12,111 @@ function get_target_range_of_shift(day) {
 
     for (var i = 1; i < lastDay; i++) {
         var shiftRanges = sheet.getRange(6, startCol + day, 32, 1).getValues();
-        Logger.log(shiftRanges);
-        return shiftRanges;
+
+        //ここで配列の値を変換する
+        for (var j = 0; j < shiftRanges.length; j++) {
+            for (var k = 0; k < shiftRanges[j].length; k++) {
+                switch (shiftRanges[j][k]) {
+                    case 'M①':
+                        shiftRanges[j].splice(k, 1, 'マネージャー①');
+                        break;
+                    case 'M②':
+                        shiftRanges[j].splice(k, 1, 'マネージャー②');
+                        break;
+                    case 'M③':
+                        shiftRanges[j].splice(k, 1, 'マネージャー③');
+                        break;
+                    case 'M④':
+                        shiftRanges[j].splice(k, 1, 'マネージャー④');
+                        break;
+                    case 'M⑤':
+                        shiftRanges[j].splice(k, 1, 'マネージャー⑤');
+                        break;
+                    case '制①':
+                        shiftRanges[j].splice(k, 1, '制作①');
+                        break;
+                    case '制②':
+                        shiftRanges[j].splice(k, 1, '制作②');
+                        break;
+                    case '制③':
+                        shiftRanges[j].splice(k, 1, '制作③');
+                        break;
+                    case '制④':
+                        shiftRanges[j].splice(k, 1, '制作④');
+                        break;
+                    case '制⑤':
+                        shiftRanges[j].splice(k, 1, '制作⑤');
+                        break;
+                    case '制⑥':
+                        shiftRanges[j].splice(k, 1, '制作⑥');
+                        break;
+                    case '制⑦':
+                        shiftRanges[j].splice(k, 1, '制作⑦');
+                        break;
+                    case '制⑧':
+                        shiftRanges[j].splice(k, 1, '制作⑧');
+                        break;
+                    case '選':
+                        shiftRanges[j].splice(k, 1, '選挙');
+                        break;
+                    case '特1':
+                        shiftRanges[j].splice(k, 1, '特集①');
+                        break;
+                    case 'ES':
+                        shiftRanges[j].splice(k, 1, 'EASY');
+                        break;
+                    case '特2':
+                        shiftRanges[j].splice(k, 1, '特集②');
+                        break;
+                    case '特3':
+                        shiftRanges[j].splice(k, 1, '特集③');
+                        break;
+                    case '地2':
+                        shiftRanges[j].splice(k, 1, '地域②');
+                        break;
+                    case '地1':
+                        shiftRanges[j].splice(k, 1, '地域①');
+                        break;
+                    case '朝L':
+                        shiftRanges[j].splice(k, 1, '朝リーダー');
+                        break;
+                    case '朝1':
+                        shiftRanges[j].splice(k, 1, '朝①');
+                        break;
+                    case '昼1':
+                        shiftRanges[j].splice(k, 1, '昼①');
+                        break;
+                    case '昼2':
+                        shiftRanges[j].splice(k, 1, '昼②');
+                        break;
+                    case '昼3':
+                        shiftRanges[j].splice(k, 1, '昼③');
+                        break;
+                    case '昼L':
+                        shiftRanges[j].splice(k, 1, '昼リーダー');
+                        break;
+                    case '制':
+                        shiftRanges[j].splice(k, 1, '制作');
+                        break;
+                    case 'L':
+                        shiftRanges[j].splice(k, 1, '夜リーダー');
+                        break;
+                    case '夜1':
+                        shiftRanges[j].splice(k, 1, '夜①');
+                        break;
+                    case '休':
+                        shiftRanges[j].splice(k, 1, '休');
+                        break;
+
+                    default:
+                        shiftRanges[j].splice(k, 1, '');
+                        break;
+                }
+            }
+        }
     }
+    Logger.log(shiftRanges);
+    return shiftRanges;
 }
 
 function set_shift_value_to_taeget() {
@@ -30,9 +132,6 @@ function set_shift_value_to_taeget() {
 
         //ここで対象のシフト表のセルの値を取得
         var shiftValues = get_target_range_of_shift(i);
-
-        //ここで配列の値を変換する
-
         //セットする
         targetRanges.setValues(shiftValues);
     }
@@ -57,6 +156,6 @@ function getSS() {
             break;
         }
     }
-    Logger.log(ss);//「Spreadsheet」がログにでる
+    //    Logger.log(ss);//「Spreadsheet」がログにでる
     return ss;
 }
