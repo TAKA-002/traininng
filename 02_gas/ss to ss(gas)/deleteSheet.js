@@ -1,8 +1,14 @@
-//ボタンを押した月を取得して、その1ヶ月前を取得する
+//------▼▼コードの目的▼▼------
+//イベントボタンを押下し、不要なシートを削除する
+
+//------▼▼コード調整箇所▼▼------
+//特になし
+
+
+//ボタンを押した年月を取得して、その1ヶ月前を「yyyymm」の6桁で取得する
 function checkDate() {
   var date = new Date();
   var targetYear = date.getFullYear();
-  //セルの月を２桁に統一する
   var Month = ("0" + (date.getMonth() + 1)).slice(-2);
 
   switch (Month) {
@@ -71,41 +77,32 @@ function checkDate() {
 }
 
 
-//削除されるシートの条件：非表示、シート名が先月のもの
+//-----運用中「業務管理シート」で不要な非表示シートを削除する-----
+//削除条件：「非表示」「シート名が前月」
+
+//-----処理-----
+//１：開いているスプレッドシートを取得
+//２：シート数をカウントする（シートの数だけ以下フローを繰り返す）
+//３：ボタンを押した月の前月「yyyymm」をtargetに格納
+//４：開いているスプレッドシートのシートインデックス[i]を取得
+//取得したシートが存在していたら、
+//５：そのシートのシート名を取得する
+//６：「もしも取得したシートのシート名にyyyymmが含まれていた」「そのシートが非表示のシートである」→ そのシートを削除する
+//７：削除した場合、シート数が減るためループする際にインデックスがずれてしまう。なので、マイナス１する
+//８：削除しない場合はその回のループは飛ばす
+//９：もしもシートインデックス[i]が存在しない場合、ループを終了する
+
 function deleteHiddenSheets() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();//開いているシートを取得
-  const sheetCount = ss.getNumSheets();//シート数をカウント
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheetCount = ss.getNumSheets();
   var target = checkDate();
 
-  for (var i = 0; i <= sheetCount; i++) {//シートの数だけ繰り返す
+  for (var i = 0; i <= sheetCount; i++) {
     var sheet = ss.getSheets()[i];
     if (sheet != null) {
-      var sheetName = sheet.getSheetName();//シート名を取得する
-      if (sheetName.match(target) && sheet.isSheetHidden() === true) {//シート名が先月のyyyymmがふくまれていて、かつ「非表示」である場合
-        ss.deleteSheet(sheet);//削除する
-        i--;//削除したらiをマイナス１してひとつ飛ばさないようにする
-      } else {
-        continue;
-      }
-    }
-    if (sheet == null) {
-      break;
-    }
-  }
-}
-
-
-//削除されるシートの条件：表示、シート名が半角数字8桁
-function deleteShowSheets() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();//開いているシートを取得
-  const sheetCount = ss.getNumSheets();//シート数をカウント
-
-  for (var i = 0; i <= sheetCount; i++) {//シートの数だけ繰り返す
-    var sheet = ss.getSheets()[i];
-    if (sheet != null) {
-      var sheetName = sheet.getSheetName();//シート名を取得する
-      if (sheetName.match(/[\d]{8}/) && sheet.isSheetHidden() === false) {//もしもシート名が半角数字8桁で、かつ「表示」である場合
-        ss.deleteSheet(sheet);//削除する
+      var sheetName = sheet.getSheetName();
+      if (sheetName.match(target) && sheet.isSheetHidden() === true) {
+        ss.deleteSheet(sheet);
         i--;
       } else {
         continue;
@@ -118,9 +115,47 @@ function deleteShowSheets() {
 }
 
 
+//-----バックアップ用スプレッドシートの体裁を調整する-----
+//削除条件：「表示」「シート名が半角数字8桁」
+
+//-----処理-----
+//１：現在開いているスプレッドシートを取得
+//２：シート数をカウントする（シートの数だけ以下ループを繰り返す）
+//３：開いているシートのシートインデックス番号[i]をsheetに格納
+//４：もしもシートが存在していたら、そのシートのシート名を取得してsheetNameに格納
+//５：「シート名が半角数字８桁」「シートが非表示ではない」場合は、そのシートを削除する
+//６：削除してインデックス番号がずれるので、次のインデックス番号を同じにするためiを1マイナスする
+//７：もしも５で条件が合わなかったら、そのループは飛ばす
+//８:もしも４でシートが存在していない場合、ループを終了する
+
+function deleteShowSheets() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheetCount = ss.getNumSheets();
+
+  for (var i = 0; i <= sheetCount; i++) {
+    var sheet = ss.getSheets()[i];
+    if (sheet != null) {
+      var sheetName = sheet.getSheetName();
+      if (sheetName.match(/[\d]{8}/) && sheet.isSheetHidden() === false) {
+        ss.deleteSheet(sheet);
+        i--;
+      } else {
+        continue;
+      }
+    }
+    if (sheet == null) {
+      break;
+    }
+  }
+}
+
+
+//-----バックアップ用スプレッドシートの体裁を調整する-----
+//deleteShowSheetsで、不要な表示シートを削除したあと、必要な非表示のシートを表示にする
+
 function showSheet() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();//開いているシートを取得
-  const sheetCount = ss.getNumSheets();//シート数をカウント
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheetCount = ss.getNumSheets();
 
   for (var i = 0; i <= sheetCount; i++) {
     var sheet = ss.getSheets()[i];

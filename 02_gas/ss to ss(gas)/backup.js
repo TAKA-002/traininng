@@ -1,19 +1,22 @@
-//このファイル自体を複製
+//------▼▼コードの目的▼▼------
+//コンテナバインドで開いているファイル自体を複製する
 //複製したファイル名をリネームする
+
+//------▼▼コード調整箇所▼▼------
+//①「業務管理シート」のファイルIDを記述する
+//②複製したファイルを格納するフォルダを記述する
+
 
 function copy_this_file() {
     var year = targetYear();
     var month = targetMonth();
 
-    //★★★①「業務管理シート」のファイルIDを記述★★★
-    var willBeCopiedFill = DriveApp.getFileById('1L5fqXV1iRkLWeSqe2z8dwTd7GKu2RGTR9G9RBcphPnU');
+    var willBeCopiedFill = DriveApp.getFileById('1L5fqXV1iRkLWeSqe2z8dwTd7GKu2RGTR9G9RBcphPnU'); //①
 
-    //★★★②複製したファイルの移動先を指定★★★
-    var outputFolder = DriveApp.getFolderById('19uX3BktgUEpZyNXd4COca31Mrc8iyEKt');
+    var outputFolder = DriveApp.getFolderById('19uX3BktgUEpZyNXd4COca31Mrc8iyEKt'); //②
 
     //業務管理シートのファイルをコピーする
     willBeCopiedFill.makeCopy(willBeCopiedFill.getName() + '（' + year + month + '）', outputFolder);
-
 }
 
 function targetYear() {
@@ -25,6 +28,7 @@ function targetYear() {
     if (month === 1) {
         var year = year - 1;
     }
+
     return year;
 }
 
@@ -37,5 +41,6 @@ function targetMonth() {
     if (month === "00") {
         var month = 12;
     }
+
     return month;
 }
