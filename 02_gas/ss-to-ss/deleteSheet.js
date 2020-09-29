@@ -1,189 +1,197 @@
-//------▼▼コードの目的▼▼------
-//イベントボタンを押下し、不要なシートを削除する
-
-//------▼▼コード調整箇所▼▼------
-//特になし
-
-
-//ボタンを押した年月を取得して、その1ヶ月前を「yyyymm」の6桁で取得する
+//ボタンを押した月を取得して、その1ヶ月前を取得する
 function checkDate() {
-  var date = new Date();
-  var targetYear = date.getFullYear();
-  var Month = ("0" + (date.getMonth() + 1)).slice(-2);
+    var date = new Date();
+    var targetYear = date.getFullYear();
+    //セルの月を２桁に統一する
+    var Month = ("0" + (date.getMonth() + 1)).slice(-2);
 
-  switch (Month) {
-    case "01":
-      targetYear = targetYear - 1;
-      var targetMonth = "12";
-      var target = targetYear + targetMonth;
-      return target;
-      break;
-    case "02":
-      var targetMonth = "01";
-      var target = targetYear + targetMonth;
-      return target;
-      break;
-    case "03":
-      var targetMonth = "02";
-      var target = targetYear + targetMonth;
-      return target;
-      break;
-    case "04":
-      var targetMonth = "03";
-      var target = targetYear + targetMonth;
-      return target;
-      break;
-    case "05":
-      var targetMonth = "04";
-      var target = targetYear + targetMonth;
-      return target;
-      break;
-    case "06":
-      var targetMonth = "05";
-      var target = targetYear + targetMonth;
-      return target;
-      break;
-    case "07":
-      var targetMonth = "06";
-      var target = targetYear + targetMonth;
-      return target;
-      break;
-    case "08":
-      var targetMonth = "07";
-      var target = targetYear + targetMonth;
-      return target;
-      break;
-    case "09":
-      var targetMonth = "08";
-      var target = targetYear + targetMonth;
-      return target;
-      break;
-    case "10":
-      var targetMonth = "09";
-      var target = targetYear + targetMonth;
-      return target;
-      break;
-    case "11":
-      var targetMonth = "10";
-      var target = targetYear + targetMonth;
-      return target;
-      break;
-    case "12":
-      var targetMonth = "11";
-      var target = targetYear + targetMonth;
-      return target;
-      break;
-  }
+    switch (Month) {
+        case "01":
+            targetYear = targetYear - 1;
+            var targetMonth = "12";
+            var target = targetYear + targetMonth;
+            return target;
+            break;
+        case "02":
+            var targetMonth = "01";
+            var target = targetYear + targetMonth;
+            return target;
+            break;
+        case "03":
+            var targetMonth = "02";
+            var target = targetYear + targetMonth;
+            return target;
+            break;
+        case "04":
+            var targetMonth = "03";
+            var target = targetYear + targetMonth;
+            return target;
+            break;
+        case "05":
+            var targetMonth = "04";
+            var target = targetYear + targetMonth;
+            return target;
+            break;
+        case "06":
+            var targetMonth = "05";
+            var target = targetYear + targetMonth;
+            return target;
+            break;
+        case "07":
+            var targetMonth = "06";
+            var target = targetYear + targetMonth;
+            return target;
+            break;
+        case "08":
+            var targetMonth = "07";
+            var target = targetYear + targetMonth;
+            return target;
+            break;
+        case "09":
+            var targetMonth = "08";
+            var target = targetYear + targetMonth;
+            return target;
+            break;
+        case "10":
+            var targetMonth = "09";
+            var target = targetYear + targetMonth;
+            return target;
+            break;
+        case "11":
+            var targetMonth = "10";
+            var target = targetYear + targetMonth;
+            return target;
+            break;
+        case "12":
+            var targetMonth = "11";
+            var target = targetYear + targetMonth;
+            return target;
+            break;
+    }
+}
+
+//ボタンを押した月を取得する
+function checkNowDate() {
+    var date = new Date();
+    var targetYear = date.getFullYear();
+    //セルの月を２桁に統一する
+    var targetMonth = ("0" + (date.getMonth() + 1)).slice(-2);
+    var target = targetYear + targetMonth;
+    return target;
 }
 
 
-//-----運用中「業務管理シート」で不要な非表示シートを削除する-----
-//削除条件：「非表示」「シート名が前月」
+//削除されるシートの条件：非表示、シート名が今月のもの
+function deleteHiddenNowSheets() {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();//開いているシートを取得
+    const sheetCount = ss.getNumSheets();//シート数をカウント
+    var target = checkNowDate();
 
-//-----処理-----
-//１：開いているスプレッドシートを取得
-//２：シート数をカウントする（シートの数だけ以下フローを繰り返す）
-//３：ボタンを押した月の前月「yyyymm」をtargetに格納
-//４：開いているスプレッドシートのシートインデックス[i]を取得
-//取得したシートが存在していたら、
-//５：そのシートのシート名を取得する
-//６：「もしも取得したシートのシート名にyyyymmが含まれていた」「そのシートが非表示のシートである」→ そのシートを削除する
-//７：削除した場合、シート数が減るためループする際にインデックスがずれてしまう。なので、マイナス１する
-//８：削除しない場合はその回のループは飛ばす
-//９：もしもシートインデックス[i]が存在しない場合、ループを終了する
+    for (var i = 0; i <= sheetCount; i++) {//シートの数だけ繰り返す
+        var sheet = ss.getSheets()[i];
+        if (sheet != null) {
+            var sheetName = sheet.getSheetName();//シート名を取得する
+            if (sheetName.match(target) && sheet.isSheetHidden() === true) {//シート名が今月のyyyymmがふくまれていて、かつ「非表示」である場合
+                ss.deleteSheet(sheet);//削除する
+                i--;//削除したらiをマイナス１してひとつ飛ばさないようにする
+            } else {
+                continue;
+            }
+        }
+        if (sheet == null) {
+            break;
+        }
+    }
+}
 
+
+//削除されるシートの条件：非表示、シート名が先月のもの
 function deleteHiddenSheets() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheetCount = ss.getNumSheets();
-  var target = checkDate();
+    const ss = SpreadsheetApp.getActiveSpreadsheet();//開いているシートを取得
+    const sheetCount = ss.getNumSheets();//シート数をカウント
+    var target = checkDate();
 
-  for (var i = 0; i <= sheetCount; i++) {
-    var sheet = ss.getSheets()[i];
-    if (sheet != null) {
-      var sheetName = sheet.getSheetName();
-      if (sheetName.match(target) && sheet.isSheetHidden() === true) {
-        ss.deleteSheet(sheet);
-        i--;
-      } else {
-        continue;
-      }
+    for (var i = 0; i <= sheetCount; i++) {//シートの数だけ繰り返す
+        var sheet = ss.getSheets()[i];
+        if (sheet != null) {
+            var sheetName = sheet.getSheetName();//シート名を取得する
+            if (sheetName.match(target) && sheet.isSheetHidden() === true) {//シート名が先月のyyyymmがふくまれていて、かつ「非表示」である場合
+                ss.deleteSheet(sheet);//削除する
+                i--;//削除したらiをマイナス１してひとつ飛ばさないようにする
+            } else {
+                continue;
+            }
+        }
+        if (sheet == null) {
+            break;
+        }
     }
-    if (sheet == null) {
-      break;
-    }
-  }
 }
 
 
-//-----バックアップ用スプレッドシートの体裁を調整する-----
-//削除条件：「表示」「シート名が半角数字8桁」
-
-//-----処理-----
-//１：現在開いているスプレッドシートを取得
-//２：シート数をカウントする（シートの数だけ以下ループを繰り返す）
-//３：開いているシートのシートインデックス番号[i]をsheetに格納
-//４：もしもシートが存在していたら、そのシートのシート名を取得してsheetNameに格納
-//５：「シート名が半角数字８桁」「シートが非表示ではない」場合は、そのシートを削除する
-//６：削除してインデックス番号がずれるので、次のインデックス番号を同じにするためiを1マイナスする
-//７：もしも５で条件が合わなかったら、そのループは飛ばす
-//８:もしも４でシートが存在していない場合、ループを終了する
-
+//削除されるシートの条件：表示、シート名が半角数字8桁
 function deleteShowSheets() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheetCount = ss.getNumSheets();
+    const ss = SpreadsheetApp.getActiveSpreadsheet();//開いているシートを取得
+    const sheetCount = ss.getNumSheets();//シート数をカウント
 
-  for (var i = 0; i <= sheetCount; i++) {
-    var sheet = ss.getSheets()[i];
-    if (sheet != null) {
-      var sheetName = sheet.getSheetName();
-      if (sheetName.match(/[\d]{8}/) && sheet.isSheetHidden() === false) {
-        ss.deleteSheet(sheet);
-        i--;
-      } else {
-        continue;
-      }
+    for (var i = 0; i <= sheetCount; i++) {//シートの数だけ繰り返す
+        var sheet = ss.getSheets()[i];
+        if (sheet != null) {
+            var sheetName = sheet.getSheetName();//シート名を取得する
+            if (sheetName.match(/[\d]{8}/) && sheet.isSheetHidden() === false) {//もしもシート名が半角数字8桁で、かつ「表示」である場合
+                ss.deleteSheet(sheet);//削除する
+                i--;
+            } else {
+                continue;
+            }
+        }
+        if (sheet == null) {
+            break;
+        }
     }
-    if (sheet == null) {
-      break;
-    }
-  }
 }
 
-
-//-----バックアップ用スプレッドシートの体裁を調整する-----
-//deleteShowSheetsで、不要な表示シートを削除したあと、必要な非表示のシートを表示にする
 
 function showSheet() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheetCount = ss.getNumSheets();
+    const ss = SpreadsheetApp.getActiveSpreadsheet();//開いているシートを取得
+    const sheetCount = ss.getNumSheets();//シート数をカウント
 
-  for (var i = 0; i <= sheetCount; i++) {
-    var sheet = ss.getSheets()[i];
-    if (sheet != null && sheet.isSheetHidden() === true) {
-      sheet.showSheet();
+    for (var i = 0; i <= sheetCount; i++) {
+        var sheet = ss.getSheets()[i];
+        if (sheet != null && sheet.isSheetHidden() === true) {
+            sheet.showSheet();
+        }
     }
-  }
 }
 
 
 function openDialogBoxforBackup() {
-  var result = Browser.msgBox("注意：バックアップ用のファイルで実行してください！！実行してよろしいですか？", Browser.Buttons.OK_CANCEL);
-  if (result == "ok") {
-    deleteShowSheets();
-    showSheet();
-  } //OKの処置
-  if (result == "cancel") {
-    return;
-  } //Cancelの処置
+    var result = Browser.msgBox("注意：バックアップ用のファイルで実行してください！！実行してよろしいですか？", Browser.Buttons.OK_CANCEL);
+    if (result == "ok") {
+        var ss = SpreadsheetApp.getActiveSpreadsheet();
+        var name = ss.getName();
+        if (name === "NHK-業務管理シート") {
+            Browser.msgBox("「業務管理シート」のため、スクリプトは実施されませんでした。");
+            return;
+        }
+        if (name != "NHK-業務管理シート") {
+            deleteShowSheets();
+            deleteHiddenNowSheets();
+            showSheet();
+        }
+    } //OKの処置
+    if (result == "cancel") {
+        return;
+    } //Cancelの処置
 }
 
 
 function openDialogBoxforActive() {
-  var result = Browser.msgBox("注意：非表示の先月のシートが削除されます！！実行してよろしいですか？", Browser.Buttons.OK_CANCEL);
-  if (result == "ok") {
-    deleteHiddenSheets();
-  } //OKの処置
-  if (result == "cancel") {
-    return;
-  } //Cancelの処置
+    var result = Browser.msgBox("注意：非表示の先月のシートが削除されます！！実行してよろしいですか？", Browser.Buttons.OK_CANCEL);
+    if (result == "ok") {
+        deleteHiddenSheets();
+    } //OKの処置
+    if (result == "cancel") {
+        return;
+    } //Cancelの処置
 }
