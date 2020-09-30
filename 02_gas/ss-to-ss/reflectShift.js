@@ -133,9 +133,6 @@ function chengeAndsetValues() {
         if (shiftValues[j][k] === "") {
           shiftValues[j].splice(k, 1, '');
         }
-        else {
-          shiftValues[j].splice(k, 1, '要確認');
-        }
       }
     }
     var ss = SpreadsheetApp.getActiveSpreadsheet();
