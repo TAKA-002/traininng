@@ -1,5 +1,26 @@
-//ボタンを押した月を取得して、その1ヶ月前を取得する
-function checkDate() {
+//------▼▼コードの目的▼▼------
+//複製したファイル（バックアップ用ファイル）にて以下実施
+//不要シートを表示・非表示に限らず削除
+//非表示になっている先月のシートを表示
+
+//------▼▼openDialogBoxforBackup関数の運用例▼▼------
+//業務管理シートは、10月に運用中であり、9月のバックアップとるためにボタンをおす
+//9月（前月）のシートは全て非表示になっている：：表示にする
+//10月（当月）のシートは一部非表示になっている可能性がある：：削除
+//表示シートは10月（当月）のシートとなっている：：削除
+
+//------▼▼openDialogBoxforActive関数の運用例▼▼------
+//業務管理シートは、10月に運用中であり、不要な9月の非表示シートを削除するためにボタンをおす
+//非表示になっているのは10月（当月）の運用には必要ない9月（前月）のシート：：削除
+//表示シートの中に10月（当月）シートはない
+//非表示のシートの中に8月（前々月）シートはない
+
+//------▼▼調整箇所▼▼------
+//なし
+
+
+//ボタンを押した月から「前月」を戻り値にする
+function getLastMonth() {
     var date = new Date();
     var targetYear = date.getFullYear();
     //セルの月を２桁に統一する
@@ -70,8 +91,9 @@ function checkDate() {
     }
 }
 
-//ボタンを押した月を取得する
-function checkNowDate() {
+
+//ボタンを押した「年月（yyyymm）」を取得する
+function getTargetYM() {
     var date = new Date();
     var targetYear = date.getFullYear();
     //セルの月を２桁に統一する
@@ -81,18 +103,19 @@ function checkNowDate() {
 }
 
 
-//削除されるシートの条件：非表示、シート名が今月のもの
+//不要なシートを削除する１
+//【条件】：非表示、シート名が当月のもの
 function deleteHiddenNowSheets() {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();//開いているシートを取得
-    const sheetCount = ss.getNumSheets();//シート数をカウント
-    var target = checkNowDate();
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheetCount = ss.getNumSheets();
+    var target = getTargetYM();
 
-    for (var i = 0; i <= sheetCount; i++) {//シートの数だけ繰り返す
+    for (var i = 0; i <= sheetCount; i++) {
         var sheet = ss.getSheets()[i];
         if (sheet != null) {
-            var sheetName = sheet.getSheetName();//シート名を取得する
+            var sheetName = sheet.getSheetName();
             if (sheetName.match(target) && sheet.isSheetHidden() === true) {//シート名が今月のyyyymmがふくまれていて、かつ「非表示」である場合
-                ss.deleteSheet(sheet);//削除する
+                ss.deleteSheet(sheet);
                 i--;//削除したらiをマイナス１してひとつ飛ばさないようにする
             } else {
                 continue;
@@ -105,18 +128,19 @@ function deleteHiddenNowSheets() {
 }
 
 
-//削除されるシートの条件：非表示、シート名が先月のもの
-function deleteHiddenSheets() {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();//開いているシートを取得
-    const sheetCount = ss.getNumSheets();//シート数をカウント
-    var target = checkDate();
+//不要なシートを削除する２
+//【条件】：非表示、シート名が前月のもの
+function deleteHiddenLastSheet() {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheetCount = ss.getNumSheets();
+    var target = getLastMonth();
 
-    for (var i = 0; i <= sheetCount; i++) {//シートの数だけ繰り返す
+    for (var i = 0; i <= sheetCount; i++) {
         var sheet = ss.getSheets()[i];
         if (sheet != null) {
-            var sheetName = sheet.getSheetName();//シート名を取得する
-            if (sheetName.match(target) && sheet.isSheetHidden() === true) {//シート名が先月のyyyymmがふくまれていて、かつ「非表示」である場合
-                ss.deleteSheet(sheet);//削除する
+            var sheetName = sheet.getSheetName();
+            if (sheetName.match(target) && sheet.isSheetHidden() === true) {//シート名が前月のyyyymmがふくまれていて、かつ「非表示」である場合
+                ss.deleteSheet(sheet);
                 i--;//削除したらiをマイナス１してひとつ飛ばさないようにする
             } else {
                 continue;
@@ -129,18 +153,19 @@ function deleteHiddenSheets() {
 }
 
 
-//削除されるシートの条件：表示、シート名が半角数字8桁
+//不要なシートを削除する３
+//【条件】：表示、シート名が半角数字8桁
 function deleteShowSheets() {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();//開いているシートを取得
-    const sheetCount = ss.getNumSheets();//シート数をカウント
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheetCount = ss.getNumSheets();
 
-    for (var i = 0; i <= sheetCount; i++) {//シートの数だけ繰り返す
+    for (var i = 0; i <= sheetCount; i++) {
         var sheet = ss.getSheets()[i];
         if (sheet != null) {
-            var sheetName = sheet.getSheetName();//シート名を取得する
+            var sheetName = sheet.getSheetName();
             if (sheetName.match(/[\d]{8}/) && sheet.isSheetHidden() === false) {//もしもシート名が半角数字8桁で、かつ「表示」である場合
-                ss.deleteSheet(sheet);//削除する
-                i--;
+                ss.deleteSheet(sheet);
+                i--;//削除したらiをマイナス１してひとつ飛ばさないようにする
             } else {
                 continue;
             }
@@ -152,9 +177,10 @@ function deleteShowSheets() {
 }
 
 
-function showSheet() {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();//開いているシートを取得
-    const sheetCount = ss.getNumSheets();//シート数をカウント
+//非表示のシートを表示にする
+function showHiddenSheet() {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheetCount = ss.getNumSheets();
 
     for (var i = 0; i <= sheetCount; i++) {
         var sheet = ss.getSheets()[i];
@@ -165,6 +191,7 @@ function showSheet() {
 }
 
 
+//実行関数１
 function openDialogBoxforBackup() {
     var result = Browser.msgBox("注意：バックアップ用のファイルで実行してください！！実行してよろしいですか？", Browser.Buttons.OK_CANCEL);
     if (result == "ok") {
@@ -177,21 +204,22 @@ function openDialogBoxforBackup() {
         if (name != "NHK-業務管理シート") {
             deleteShowSheets();
             deleteHiddenNowSheets();
-            showSheet();
+            showHiddenSheet();
         }
-    } //OKの処置
+    }
     if (result == "cancel") {
         return;
-    } //Cancelの処置
+    }
 }
 
 
+//実行関数２
 function openDialogBoxforActive() {
     var result = Browser.msgBox("注意：非表示の先月のシートが削除されます！！実行してよろしいですか？", Browser.Buttons.OK_CANCEL);
     if (result == "ok") {
-        deleteHiddenSheets();
-    } //OKの処置
+        deleteHiddenLastSheet();
+    }
     if (result == "cancel") {
         return;
-    } //Cancelの処置
+    }
 }
