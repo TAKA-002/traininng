@@ -1,7 +1,7 @@
 //------▼▼コードの目的▼▼------
 //シフト表のシートの年月から、googleカレンダーの曜日祝日データ基づいてシートを作成する
 //作成した新シートにシフト表に基づいて「シフト」を入力
-//所要時間：約2分30秒
+//所要時間：約3分
 
 
 //------▼▼コード調整箇所▼▼------
@@ -41,15 +41,12 @@ const DELETE_LINE_COUNT = 6;
 //２：実行関数を実行する前に、シフト表のスプレッドシートに作成したい月のシフト表を入れておく必要がある（シート名は汎用のものにすると変更しなくていい）
 
 
-
 function createAndSetValueToSheet() {
     createSheet();//シートを作る
     copyShiftSheet();//元のシフト表を保存する
     repairShiftSheet();//シフト表を改修
     chengeAndsetValues();//シフト表の値に合わせて各シートに値を反映
 }
-
-
 
 
 //シートを作成する月の日数を調べる
@@ -266,6 +263,9 @@ function chengeAndsetValues() {
                 }
                 if (shiftValues[j][k] === "夜1") {
                     shiftValues[j].splice(k, 1, '夜①');
+                }
+                if (shiftValues[j][k] === "夜制") {
+                    shiftValues[j].splice(k, 1, '夜勤');
                 }
                 if (shiftValues[j][k] === "休") {
                     shiftValues[j].splice(k, 1, '休');
