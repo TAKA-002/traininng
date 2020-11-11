@@ -1,56 +1,33 @@
-//--------------------------------------------------
-
+//===============================
 //■実施想定
-
+//===============================
 //＜夜勤者がボタンを押したタイミングが日が変わる前の場合＞
 //当日のシフトデータと、翌日のシフトデータを取得
+
+//もしもボタンをおしたタイミングが21時から24時の場合は、「当日のシフト」と「翌日のシフト」を取得して貼り付け
 
 //＜夜勤者がボタンを押したタイミングが日が変わった後の場合＞
 //前日のシフトデータと、当日のシフトデータを取得
 
-//--------------------------------------------------
-
-//--------------------------------------------------
-//　--調整箇所 ① & ②--
-//--------------------------------------------------
-//もしも勤務者全員が取得できていなかった場合は、ここを調整。
-//ここは、当日のシートの取得範囲
-//（仮に2020年10月1日夜勤者の場合は、2020年10月2日を取得）
-//①を調整した場合、②もセットで調整する。
-//①と同じ範囲以上の範囲を②も設定すること。
-
-
-//===============================
-//　--調整箇所--
-//===============================
-
-const MemberCount = 31;//デジステメンバー数が変わったら変更すること
-const SheetName = 'シフトデータ確認表';//作成シート
-const ManagementSheetID = '1DPQVKf7NFl2qq7xMoHlKzS1_zpVltJrhuFj4InU2xvk';//業務管理シートのID
-
-//===============================
 //もしもボタンをおしたタイミングが0時から7時の場合は、「前日のシフト」と「当日のシフト」を取得して貼り付け
-//もしもボタンをおしたタイミングが21時から24時の場合は、「当日のシフト」と「翌日のシフト」を取得して貼り付け
+
+
 //===============================
+//■調整箇所
+//===============================
+//もしも勤務者全員が取得できていなかった場合は、ここを調整。
 
-//現在時刻を取得
-function getTime(){
-    var now = new Date();
-    var Hour = now.getHours();
-    return Hour;
-}
+//デジステ人数が変わったら変更（業務管理シート：A7 - 夜勤者まで）
+const MemberCount = 32;
 
+//出力先シート
+const SheetName = 'シフトデータ確認表';
 
-//昨日の業務管理シートのシフトをイベントシートに貼り付け
-function setValues(beforeValues, afterValues) {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet = ss.getSheetByName(SheetName);
-    
-    sheet.getRange(1, 1, MemberCount, 2).setValues(beforeValues);
-    sheet.getRange(1, 4, MemberCount, 2).setValues(afterValues);
-}
+//業務管理シートのID
+const ManagementSheetID = '1DPQVKf7NFl2qq7xMoHlKzS1_zpVltJrhuFj4InU2xvk';
 
 
+//===============================
 //実行関数：実行時間で処理を分岐
 function setTwoValues(){
     var Hour = getTime();
@@ -65,10 +42,28 @@ function setTwoValues(){
         setValues(lastdaysShiftValues,todaysShiftValues);
     }
 }
+//===============================
+
+
+//現在時刻を取得（戻り値は現在の「時」）
+function getTime(){
+    var now = new Date();
+    var Hour = now.getHours();
+    return Hour;
+}
+
+//業務管理シートのシフトをイベントシートに貼り付け
+function setValues(beforeValues, afterValues) {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName(SheetName);
+    
+    sheet.getRange(2, 1, MemberCount, 2).setValues(beforeValues);
+    sheet.getRange(2, 4, MemberCount, 2).setValues(afterValues);
+}
 
 
 //===============================
-//　前日
+//前日
 //===============================
 
 //前日の年月日を取得
@@ -103,7 +98,6 @@ function makeLastDaySheetName() {
     return lastDaySheetName;
 }
 
-
 //前日の業務管理シートを取得
 function getLastDaysShift() {
     var ss = SpreadsheetApp.openById(ManagementSheetID);
@@ -116,7 +110,7 @@ function getLastDaysShift() {
 
 
 //===============================
-//　当日
+//当日
 //===============================
 
 //当日の年月日を取得
