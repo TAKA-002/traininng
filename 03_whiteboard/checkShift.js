@@ -13,12 +13,16 @@
 
 
 //===============================
-//■調整箇所
+//■確認箇所
 //===============================
-//もしも勤務者全員が取得できていなかった場合は、ここを調整。
+//もしも勤務者全員が取得できていなかった場合は、ここを確認。
 
-//デジステ人数が変わったら変更（業務管理シート：A7 - 夜勤者まで）
-const MemberCount = 32;
+//デジステ人数が変わったら変更される。（A3セルに記入されている数字を取得している）
+function getMemberCount(){
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    const MemberCount = ss.getSheetByName(SheetName).getRange("A3").getValue();
+    return MemberCount;
+}
 
 //出力先シート
 const SheetName = 'シフトデータ確認表';
@@ -28,7 +32,10 @@ const ManagementSheetID = '1DPQVKf7NFl2qq7xMoHlKzS1_zpVltJrhuFj4InU2xvk';
 
 
 //===============================
-//実行関数：実行時間で処理を分岐
+//実行関数
+//===============================
+
+//実行時間で処理を分岐
 function setTwoValues(){
     var Hour = getTime();
     if(Hour >= 21 && Hour <= 23){
@@ -57,8 +64,8 @@ function setValues(beforeValues, afterValues) {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName(SheetName);
     
-    sheet.getRange(2, 1, MemberCount, 2).setValues(beforeValues);
-    sheet.getRange(2, 4, MemberCount, 2).setValues(afterValues);
+    sheet.getRange(2, 3, getMemberCount(), 2).setValues(beforeValues);
+    sheet.getRange(2, 6, getMemberCount(), 2).setValues(afterValues);
 }
 
 
@@ -103,7 +110,7 @@ function getLastDaysShift() {
     var ss = SpreadsheetApp.openById(ManagementSheetID);
     var lastDaySheetName = makeLastDaySheetName();
     var lastDaySheet = ss.getSheetByName(lastDaySheetName);
-    var lastdaysShiftArea = lastDaySheet.getRange(7, 1, MemberCount, 2);
+    var lastdaysShiftArea = lastDaySheet.getRange(7, 1, getMemberCount(), 2);
     var lastdaysShiftValues = lastdaysShiftArea.getValues();
     return lastdaysShiftValues;
 }
@@ -132,7 +139,7 @@ function getTodaysShift() {
     var ss = SpreadsheetApp.openById(ManagementSheetID);
     var todaySheetName = makeTodaySheetName();
     var todaySheet = ss.getSheetByName(todaySheetName);
-    var todaysShiftArea = todaySheet.getRange(7, 1, MemberCount, 2);
+    var todaysShiftArea = todaySheet.getRange(7, 1, getMemberCount(), 2);
     var todaysShiftValues = todaysShiftArea.getValues();
     return todaysShiftValues;
 }
@@ -181,7 +188,7 @@ function getTomorrowShift() {
     var ss = SpreadsheetApp.openById(ManagementSheetID);
     var tomorrowSheetName = makeTomorrowSheetName();
     var tomorrowSheet = ss.getSheetByName(tomorrowSheetName);
-    var tomorrowShiftArea = tomorrowSheet.getRange(7, 1, MemberCount, 2);
+    var tomorrowShiftArea = tomorrowSheet.getRange(7, 1, getMemberCount(), 2);
     var tomorrowShiftValues = tomorrowShiftArea.getValues();
     return tomorrowShiftValues;
 }
