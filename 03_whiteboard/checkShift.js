@@ -18,7 +18,7 @@
 //もしも勤務者全員が取得できていなかった場合は、ここを確認。
 
 //デジステ人数が変わったら変更される。（A3セルに記入されている数字を取得している）
-function getMemberCount(){
+function getMemberCount() {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     const MemberCount = ss.getSheetByName(SheetName).getRange("A3").getValue();
     return MemberCount;
@@ -36,24 +36,32 @@ const ManagementSheetID = '1DPQVKf7NFl2qq7xMoHlKzS1_zpVltJrhuFj4InU2xvk';
 //===============================
 
 //実行時間で処理を分岐
-function setTwoValues(){
+function setTwoValues() {
     var Hour = getTime();
-    if(Hour >= 21 && Hour <= 23){
+    if (Hour >= 21 && Hour <= 23) {
         var todaysShiftValues = getTodaysShift();
         var tomorrowShiftValues = getTomorrowShift();
-        setValues(todaysShiftValues,tomorrowShiftValues);
+        setValues(todaysShiftValues, tomorrowShiftValues);
+
+        var todaysDate = getTodaysDate();
+        var tomorrowDate = getTomorrowDate();
+        setDateValue(todaysDate, tomorrowDate);
     }
-    if(Hour >= 0 && Hour <= 6){
+    if (Hour >= 0 && Hour <= 6) {
         var lastdaysShiftValues = getLastDaysShift();
         var todaysShiftValues = getTodaysShift();
-        setValues(lastdaysShiftValues,todaysShiftValues);
+        setValues(lastdaysShiftValues, todaysShiftValues);
+
+        var lastDaysDate = getLastDaysDate();
+        var todaysDate = getTodaysDate();
+        setDateValue(lastDaysDate, todaysDate);
     }
 }
 //===============================
 
 
 //現在時刻を取得（戻り値は現在の「時」）
-function getTime(){
+function getTime() {
     var now = new Date();
     var Hour = now.getHours();
     return Hour;
@@ -63,11 +71,18 @@ function getTime(){
 function setValues(beforeValues, afterValues) {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName(SheetName);
-    
+
     sheet.getRange(2, 3, getMemberCount(), 2).setValues(beforeValues);
     sheet.getRange(2, 6, getMemberCount(), 2).setValues(afterValues);
 }
 
+function setDateValue(beforeDate, afterDate) {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName(SheetName);
+
+    sheet.getRange(1, 4, 1).setValue(beforeDate);
+    sheet.getRange(1, 7, 1).setValue(afterDate);
+}
 
 //===============================
 //前日
@@ -79,14 +94,14 @@ function makeLastDaySheetName() {
     var year = date.getFullYear();
     var month = date.getMonth() + 1;
     var day = date.getDate();
-    
+
     //もしも元日だった場合、前年大晦日にする
     if (day === 1 && month === 1) {
         year = year - 1;
         month = 12;
         day = 31;
     }
-    
+
     //もしも月初一日だった場合、前月にして最終日を取得する
     if (day === 1) {
         month = month - 1;
@@ -95,7 +110,7 @@ function makeLastDaySheetName() {
     }
 
     //上記２パターン以外だった場合は、前日を取得するためにマイナス１する
-    if(day !== 1){
+    if (day !== 1) {
         day = day - 1;
     }
 
@@ -113,6 +128,15 @@ function getLastDaysShift() {
     var lastdaysShiftArea = lastDaySheet.getRange(7, 1, getMemberCount(), 2);
     var lastdaysShiftValues = lastdaysShiftArea.getValues();
     return lastdaysShiftValues;
+}
+
+//前日の業務管理シートの曜日を取得
+function getLastDaysDate() {
+    var ss = SpreadsheetApp.openById(ManagementSheetID);
+    var lastDaySheetName = makeLastDaySheetName();
+    var lastDaySheet = ss.getSheetByName(lastDaySheetName);
+    var lastDaysDate = lastDaySheet.getRange("AW4").getValue();
+    return lastDaysDate;
 }
 
 
@@ -133,7 +157,6 @@ function makeTodaySheetName() {
     return todaySheetName;
 }
 
-
 //当日の業務管理シートを取得
 function getTodaysShift() {
     var ss = SpreadsheetApp.openById(ManagementSheetID);
@@ -142,6 +165,15 @@ function getTodaysShift() {
     var todaysShiftArea = todaySheet.getRange(7, 1, getMemberCount(), 2);
     var todaysShiftValues = todaysShiftArea.getValues();
     return todaysShiftValues;
+}
+
+//当日の業務管理シートを取得
+function getTodaysDate() {
+    var ss = SpreadsheetApp.openById(ManagementSheetID);
+    var todaySheetName = makeTodaySheetName();
+    var todaySheet = ss.getSheetByName(todaySheetName);
+    var todaysDate = todaySheet.getRange("AW4").getValue();
+    return todaysDate;
 }
 
 
@@ -160,23 +192,23 @@ function makeTomorrowSheetName() {
     var lastDay = dt.getDate();
 
     //もしも大晦日にボタンを押した場合、年を１プラスする
-    if(day === 31 || month === 12){
+    if (day === 31 || month === 12) {
         year = year + 1;
         month = 1;
         day = 1;
     }
 
     //もしも月末にボタンを押した場合、翌月にして日を月初にする
-    if(lastDay === day){
+    if (lastDay === day) {
         month = month + 1;
         day = 1;
     }
 
     //月末以外だった場合は、取得した日数に１プラスする
-    if(day !== lastDay){
+    if (day !== lastDay) {
         day = day + 1;
     }
-    
+
     month = ("0" + month).slice(-2);
     day = ("0" + day).slice(-2);
     var tomorrowSheetName = year + month + day;
@@ -191,4 +223,12 @@ function getTomorrowShift() {
     var tomorrowShiftArea = tomorrowSheet.getRange(7, 1, getMemberCount(), 2);
     var tomorrowShiftValues = tomorrowShiftArea.getValues();
     return tomorrowShiftValues;
+}
+
+function getTomorrowDate() {
+    var ss = SpreadsheetApp.openById(ManagementSheetID);
+    var tomorrowSheetName = makeTomorrowSheetName();
+    var tomorrowSheet = ss.getSheetByName(tomorrowSheetName);
+    var tommorrowDate = tomorrowSheet.getRange("AW4").getValues();
+    return tommorrowDate;
 }
