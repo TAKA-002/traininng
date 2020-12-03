@@ -1,7 +1,31 @@
-//valueに「休」が入っている配列を削除する
+//===============================
+//実行関数
+//===============================
+function action() {
+    //マスタシートからタスクと出勤時間を取得
+    const masterData = getMasterData();
 
-//残った配列をシフト表の7時から21時のシフトの順番にならべかえる
+    //マスタシートのデータを出勤時間の早い順にソート
+    sortMasterData(masterData);
 
+    //マスタのデータの最終行を取得
+    const row_last_num = getMasterColumn();
+
+    //当日のシフトデータを取得（休以外）
+    //const Shift = getNextShiftData();
+
+    //シフトを取得してな書き込み
+    getShiftToDrew(row_last_num);
+}
+
+
+//===============================
+//業務管理シートを取得
+//===============================
+function getManagementSheet() {
+    var managementSS = SpreadsheetApp.openById(ManagementSheetID);
+    return managementSS;
+}
 
 //===============================
 //F列G列：2行目-最終行を取得して、休みを除外した配列を作成する
@@ -10,47 +34,169 @@
 function getNextShiftData() {
     var SS = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = SS.getActiveSheet();
-    var nextShiftData = sheet.getRange(2,6,32,2).getValues();
+    var nextShiftData = sheet.getRange(2, 6, 32, 2).getValues();
 
-//    Logger.log(nextShiftData);
-//    Logger.log(nextShiftData[0]);//[木下,休]
-//    Logger.log(nextShiftData[0][0]);//木下
-//    Logger.log(nextShiftData[0][1]);//休
-//    Logger.log(nextShiftData.length);//32
+    //    Logger.log(nextShiftData);
+    //    Logger.log(nextShiftData[0]);//[木下,休]
+    //    Logger.log(nextShiftData[0][0]);//木下
+    //    Logger.log(nextShiftData[0][1]);//休
+    //    Logger.log(nextShiftData.length);//32
 
     var Shift = [];
-    for(var i = 0; i < nextShiftData.length;i++){
-        if(nextShiftData[i][1] === "休"){
+    for (var i = 0; i < nextShiftData.length; i++) {
+        if (nextShiftData[i][1] === "休") {
             continue;
         }
         //「休」以外のシフトを配列Shiftに追加
-        Shift.push(nextShiftData[i]); 
+        Shift.push(nextShiftData[i]);
     }
+    Logger.log(Shift)
     return Shift;
-//    Logger.log(Shift);
 }
 
+
+//===============================
+//業務管理シートのマスタデータを取得
+//===============================
+
+function getMasterData() {
+    var SS = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = SS.getActiveSheet();
+    var nextShiftDate = sheet.getRange("G1").getValues();
+    // var nextShiftDate = "祝日";
+    var ManagementSS = getManagementSheet();
+
+    if (nextShiftDate == '平日') {
+        var lastRow = ManagementSS.getSheetByName("平日マスタ").getLastRow();
+        var masterDataRange = ManagementSS.getSheetByName("平日マスタ").getRange(2, 1, lastRow - 3, 2);//0:00の行を除外するため-3
+        var masterData = masterDataRange.getDisplayValues();
+        return masterData;
+    }
+    if (nextShiftDate == '土日') {
+        var lastRow = ManagementSS.getSheetByName("土日マスタ").getLastRow();
+        var masterDataRange = ManagementSS.getSheetByName("土日マスタ").getRange(2, 1, lastRow - 3, 2);
+        var masterData = masterDataRange.getDisplayValues();
+        Logger.log(masterData);
+        return masterData;
+    }
+    if (nextShiftDate == '祝日') {
+        var lastRow = ManagementSS.getSheetByName("祝日マスタ").getLastRow();
+        var masterDataRange = ManagementSS.getSheetByName("祝日マスタ").getRange(2, 1, lastRow - 3, 2);
+        var masterData = masterDataRange.getDisplayValues();
+        return masterData;
+    }
+}
+
+//===============================
+//業務管理シートのマスタデータを貼り付け　→　時間の早い順にソート
+//===============================
+
+//貼り付ける前に削除する必要がある
+
+function sortMasterData(masterData) {
+    const masterDataCount = masterData.length;
+    var SS = SpreadsheetApp.getActiveSpreadsheet();
+    var range = SS.getActiveSheet().getRange(2, 10, masterDataCount, 2);
+    range.setValues(masterData);
+    range.sort([{ column: 11, ascending: true }])
+}
+
+//===============================
+//貼り付けたマスターデータのタスクが記載されている列を取得する →　最終行を取得
+//===============================
+
+function getMasterColumn() {
+    var SS = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = SS.getActiveSheet();
+    var ss_range = sheet.getRange("J:J").getValues();
+    var row_last_num = ss_range.filter(String).length;
+    return row_last_num;
+}
+
+
+//===============================
+//J列の値を上からG列内で検索し、ヒットしたらその行のF列の名前を取得
+//取得した名前を検索したJ列の行のL列に記述
+//休みなら飛ばす
+//G列の値の数だけ実施する
+//===============================
+
+function getShiftToDrew(row_last_num) {
+    var SS = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = SS.getActiveSheet();
+
+
+    //メンバーの数だけ実施
+    var memberCount = 32;
+    var row = 1;
+    while (row <= memberCount) {//1<=32true
+
+        //G列2行目をとってきてsfにいれる  1+1
+        var sf = sheet.getRange((1 + row), 7, 1, 1);
+
+        //sfの値をShiftにいれる
+        var Shift = sf.getValue();
+
+        if (Shift === '') {
+            break;
+        }
+
+        //値が「休」だったら、とばす（次の行にいくために+1）
+        if (Shift === "休") {
+            row = row + 1;
+            continue;
+        }
+
+        // 初期値を2で行場号の箱rowNumに入れる(初期化)
+        var rowNum = 1;
+
+        // Shiftのデータが空じゃなかったら処理をする
+        //さらに「休」じゃなかったら、シートのJ列を取得する
+        while (rowNum <= row_last_num) {
+            var sh = sheet.getRange((1 + rowNum), 10, 1, 1);//J列
+
+            //J列の値をMasterにいれる
+            var Master = sh.getValue();
+
+            //もしもShiftとMasterが違ったら次のJ列にいくため１足、終了
+            if (Shift !== Master) {
+                rowNum = rowNum + 1;
+                continue;
+            }
+
+            //もしもShiftの値とMasterの値が同じだったら
+            if (Shift === Master) {
+
+                // Shiftのセルをアクティブにして
+                sf.activate();
+
+                // 左となりの値をnameに取得する
+                var name = sf.offset(0, -1).getValue();
+
+                //Masterのセルをアクティブにして
+                sh.activate();
+
+                //Masterのセルの右に２つずれたところにセットする
+                //セットが終わったら、次の行をチェックするために１足す
+                sh.offset(0, 2).setValue(name);
+                rowNum = rowNum + 1;
+                continue;
+            }
+        }
+        row = row + 1;
+    }
+}
 
 //===============================
 //残りの想定される問題
 //===============================
 
-//ホワイトボードにはるシフトの日が「平日」「祝日」「土日」のどれかをgoogleカレンダーから判断
 //３つのなかから判断したものの業務管理シートの「マスタ」のA2:B最終行のvalueを取得
 //B列の時間が早い順番にソート
 //ソートした配列をスプレッドシートに記載
 //記載されたシフトのvalueだけを配列で取得
 //取得した配列の上から順番に、その値を「休」を除外した配列Shiftから探す
+
 //ヒットしたらそのvalue(だれか)を取得して連想配列を作成
 //なかったら、空文字をいれる
 //新しい配列が完成したら、シートに出力
-
-function sortShiftData(){
-
-
-
-
-
-
-
-}
