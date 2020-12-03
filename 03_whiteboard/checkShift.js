@@ -103,14 +103,14 @@ function makeLastDaySheetName() {
     }
 
     //もしも月初一日だった場合、前月にして最終日を取得する
-    if (day === 1) {
+    else if (day === 1) {
         month = month - 1;
         var dt = new Date(year, month, 0);
         day = dt.getDate();
     }
 
     //上記２パターン以外だった場合は、前日を取得するためにマイナス１する
-    if (day !== 1) {
+    else {
         day = day - 1;
     }
 
@@ -192,7 +192,7 @@ function makeTomorrowSheetName() {
     var lastDay = dt.getDate();
 
     //もしも大晦日にボタンを押した場合、年を１プラスする
-    if (day === 31 || month === 12) {
+    if (day === 31 && month === 12) {
         year = year + 1;
         month = 1;
         day = 1;
