@@ -5,6 +5,9 @@ function action() {
     //マスタシートからタスクと出勤時間を取得
     const masterData = getMasterData();
 
+    //J2からP40の値を削除して初期化
+    deleteValues();
+
     //マスタシートのデータを出勤時間の早い順にソート
     sortMasterData(masterData);
 
@@ -28,32 +31,43 @@ function getManagementSheet() {
 }
 
 //===============================
-//F列G列：2行目-最終行を取得して、休みを除外した配列を作成する
+//F列G列：2行目-最終行を取得して、休みを除外した配列を作成する（未使用）
 //===============================
 
-function getNextShiftData() {
+// function getNextShiftData() {
+//     var SS = SpreadsheetApp.getActiveSpreadsheet();
+//     var sheet = SS.getActiveSheet();
+//     var nextShiftData = sheet.getRange(2, 6, 32, 2).getValues();
+
+//     //    Logger.log(nextShiftData);
+//     //    Logger.log(nextShiftData[0]);//[木下,休]
+//     //    Logger.log(nextShiftData[0][0]);//木下
+//     //    Logger.log(nextShiftData[0][1]);//休
+//     //    Logger.log(nextShiftData.length);//32
+
+//     var Shift = [];
+//     for (var i = 0; i < nextShiftData.length; i++) {
+//         if (nextShiftData[i][1] === "休") {
+//             continue;
+//         }
+//         //「休」以外のシフトを配列Shiftに追加
+//         Shift.push(nextShiftData[i]);
+//     }
+//     Logger.log(Shift)
+//     return Shift;
+// }
+
+
+//===============================
+//J2からP40の値を削除
+//===============================
+
+function deleteValues() {
     var SS = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = SS.getActiveSheet();
-    var nextShiftData = sheet.getRange(2, 6, 32, 2).getValues();
-
-    //    Logger.log(nextShiftData);
-    //    Logger.log(nextShiftData[0]);//[木下,休]
-    //    Logger.log(nextShiftData[0][0]);//木下
-    //    Logger.log(nextShiftData[0][1]);//休
-    //    Logger.log(nextShiftData.length);//32
-
-    var Shift = [];
-    for (var i = 0; i < nextShiftData.length; i++) {
-        if (nextShiftData[i][1] === "休") {
-            continue;
-        }
-        //「休」以外のシフトを配列Shiftに追加
-        Shift.push(nextShiftData[i]);
-    }
-    Logger.log(Shift)
-    return Shift;
+    var range = sheet.getRange("J2:P40");
+    range.clearContent();
 }
-
 
 //===============================
 //業務管理シートのマスタデータを取得
@@ -173,12 +187,28 @@ function getShiftToDrew(row_last_num) {
                 // 左となりの値をnameに取得する
                 var name = sf.offset(0, -1).getValue();
 
-                //Masterのセルをアクティブにして
+                //Masterのセルをアクティブにしてセルチェックカウントを０に。
                 sh.activate();
+                var cellcheckcount = 0;
+                while (cellcheckcount < 5) {//5人までできる。それ以上はこの数字を変える。５なら6人目以降はスルーされる。
+                    var checkedCell = sh.offset(0, (2 + cellcheckcount));
+                    var checkedValue = checkedCell.getValue();
+                    if (checkedValue !== '') {
+                        cellcheckcount++;
+                        continue;
+                    }
 
+                    if (checkedValue === '') {
+                        checkedCell.setValue(name);
+                        break;
+                    }
+                }
+
+                // sh.offset(0, 2).setValue(name);
                 //Masterのセルの右に２つずれたところにセットする
+
+
                 //セットが終わったら、次の行をチェックするために１足す
-                sh.offset(0, 2).setValue(name);
                 rowNum = rowNum + 1;
                 continue;
             }
@@ -186,17 +216,3 @@ function getShiftToDrew(row_last_num) {
         row = row + 1;
     }
 }
-
-//===============================
-//残りの想定される問題
-//===============================
-
-//３つのなかから判断したものの業務管理シートの「マスタ」のA2:B最終行のvalueを取得
-//B列の時間が早い順番にソート
-//ソートした配列をスプレッドシートに記載
-//記載されたシフトのvalueだけを配列で取得
-//取得した配列の上から順番に、その値を「休」を除外した配列Shiftから探す
-
-//ヒットしたらそのvalue(だれか)を取得して連想配列を作成
-//なかったら、空文字をいれる
-//新しい配列が完成したら、シートに出力
