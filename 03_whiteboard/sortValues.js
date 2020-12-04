@@ -5,9 +5,6 @@ function action() {
   //マスタシートからタスクと出勤時間を取得
   const masterData = getMasterData();
 
-  //J2からP40の値を削除して初期化
-  deleteValues();
-
   //マスタシートのデータを出勤時間の早い順にソート
   sortMasterData(masterData);
 
@@ -57,12 +54,12 @@ function getManagementSheet() {
 // }
 
 //===============================
-//J2からP40の値を削除
+//C2からP40の値を削除
 //===============================
 function deleteValues() {
   var SS = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = SS.getActiveSheet();
-  var range = sheet.getRange("J2:P40");
+  var range = sheet.getRange("C2:P40");
   range.clearContent();
 }
 
