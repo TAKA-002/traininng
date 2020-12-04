@@ -3,6 +3,6 @@
 //===============================
 
 function execution() {
-    setTwoValues();
-    action();
+  setTwoValues();
+  action();
 }
