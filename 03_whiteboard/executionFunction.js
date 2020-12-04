@@ -3,6 +3,7 @@
 //===============================
 
 function execution() {
+  deleteValues();
   setTwoValues();
   action();
 }
