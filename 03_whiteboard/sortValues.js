@@ -146,7 +146,7 @@ function getShiftToDrew(row_last_num) {
   var sheet = SS.getActiveSheet();
 
   //メンバーの数だけ実施
-  var memberCount = 32;
+  var memberCount = getMemberCount();
   var row = 1;
   while (row <= memberCount) {
     //1<=32true
